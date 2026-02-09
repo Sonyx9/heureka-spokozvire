@@ -10,6 +10,7 @@ import re
 import time
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, session, render_template
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
 import requests
 
@@ -21,6 +22,7 @@ except ImportError:
     pass
 
 app = Flask(__name__, static_folder="static")
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY") or "dev-secret-change-in-production"
 
