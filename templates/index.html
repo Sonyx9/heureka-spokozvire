@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heureka report – Spokojené zvíře</title>
+  <link rel="icon" href="/static/favicon.ico?v=1" type="image/x-icon">
+  <link rel="stylesheet" href="/static/styles.css?v=4">
+</head>
+<body>
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Vyčkejte – stahuji data</p>
+    </div>
+  </div>
+  <div class="container">
+    <header class="site-header">
+      <div class="header-top">
+        <img src="/static/logo-spokojene-zvire.png" alt="Spokojené zvíře" class="logo-main" />
+        <img src="/static/logo-bm.png" alt="BM" class="logo-corner" />
+      </div>
+      <h1 class="report-title">Report Heuréka</h1>
+      <p class="subtitle">Data k dispozici od 1. 5. 2025</p>
+    </header>
+
+    <section class="controls">
+      <label for="date-from">Od:</label>
+      <input type="date" id="date-from" />
+      <label for="date-to">Do:</label>
+      <input type="date" id="date-to" />
+      <button type="button" id="btn-load">Načíst report</button>
+      <span id="status" class="status"></span>
+    </section>
+
+    <section id="summary" class="summary hidden">
+      <h2>Souhrn za období</h2>
+      <div class="summary-grid" id="summary-grid"></div>
+      <div class="summary-derived" id="summary-derived"></div>
+    </section>
+
+    <section id="table-section" class="table-section hidden">
+      <h2>Data</h2>
+      <div class="filters">
+        <label>Vyhledávání (název / ID položky):</label>
+        <input type="text" id="search" placeholder="Hledat..." />
+        <label for="filter-click-source">Click source:</label>
+        <select id="filter-click-source">
+          <option value="">Vše</option>
+        </select>
+        <label for="filter-bidded">On bidded position:</label>
+        <select id="filter-bidded">
+          <option value="">Vše</option>
+          <option value="true">Ano</option>
+          <option value="false">Ne</option>
+        </select>
+        <button type="button" id="btn-export-csv">Export CSV</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="data-table">
+          <thead id="table-head">
+            <tr>
+              <th data-col="shop_item_name" data-label="Název produktu">Název produktu</th>
+              <th data-col="visits_total" data-label="Prokliky">Prokliky</th>
+              <th data-col="costs_with_vat_total" data-label="Náklady">Náklady</th>
+              <th data-col="orders_total" data-label="Konverze">Konverze</th>
+              <th data-col="revenue_total" data-label="Tržby">Tržby</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </div>
+  <script src="/static/app.js?v=4"></script>
+</body>
+</html>

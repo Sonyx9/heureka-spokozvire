@@ -1,0 +1,369 @@
+/* Heureka Conversions Report - minimal styling */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  margin: 0;
+  padding: 1rem;
+  background: #f5f5f5;
+  color: #222;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Header s logy */
+.site-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo-main {
+  max-height: 52px;
+  width: auto;
+  display: block;
+}
+
+.logo-corner {
+  max-height: 44px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.report-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.controls label {
+  font-weight: 500;
+}
+
+.controls input[type="date"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background: #1d4ed8;
+}
+
+.status {
+  color: #166534;
+  font-size: 0.9rem;
+}
+
+.status.error {
+  color: #b91c1c;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Načítací overlay – kruh doprostřed */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-overlay.hidden {
+  display: none !important;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: loading-spin 0.9s linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.summary {
+  margin-bottom: 1.5rem;
+}
+
+.summary h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.summary-block {
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.summary-block h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.summary-block p {
+  margin: 0.2rem 0;
+  font-size: 0.85rem;
+}
+
+.summary-derived {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.summary-derived p {
+  margin: 0.25rem 0;
+}
+
+/* ROAS a PNO – důležité údaje */
+.summary-derived .kpi-box {
+  display: inline-block;
+  margin: 0.5rem 1rem 0.5rem 0;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+}
+
+.summary-derived .kpi-box .kpi-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-derived .kpi-box .kpi-value {
+  font-size: 1.35rem;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+.table-section h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.filters label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.filters input[type="text"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 180px;
+}
+
+.filters select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.filters #btn-export-csv {
+  padding: 0.5rem 1rem;
+  background: #059669;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.filters #btn-export-csv:hover {
+  background: #047857;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+#data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+#data-table th,
+#data-table td {
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#data-table th {
+  background: #f1f5f9;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+#data-table th:hover {
+  background: #e2e8f0;
+}
+
+#data-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#data-table td.name {
+  max-width: 320px;
+  word-wrap: break-word;
+}
+
+#data-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+#data-table th .sort-arrow {
+  font-size: 0.7rem;
+  color: #2563eb;
+  margin-left: 0.25rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.page-info {
+  color: #64748b;
+}
+
+.page-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.page-btn {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.page-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.page-btn.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+  font-weight: 600;
+}
+
+.page-btn.active:hover {
+  background: #1d4ed8;
+}
