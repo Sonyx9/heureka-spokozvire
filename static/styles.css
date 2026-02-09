@@ -229,7 +229,7 @@ body {
   width: 100%;
 }
 
-/* ROAS a PNO – stejně velké boxy */
+/* ROAS a PNO – stejně velké boxy, stejný styl jako summary-block */
 .summary-derived .kpi-box {
   display: inline-flex;
   flex-direction: column;
@@ -237,28 +237,29 @@ body {
   min-width: 120px;
   max-width: 200px;
   margin: 0.5rem 0;
-  padding: 0.6rem 1rem;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-  color: #fff;
-  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  color: #1e293b;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
   font-size: 1.1rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
 }
 
 .summary-derived .kpi-box .kpi-label {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  opacity: 0.9;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: #1e293b;
+  text-align: center;
 }
 
 .summary-derived .kpi-box .kpi-value {
-  font-size: 1.35rem;
+  font-size: 1.1rem;
+  font-weight: 700;
   display: block;
-  margin-top: 0.15rem;
+  margin-top: 0.25rem;
   text-align: center;
+  color: #334155;
 }
 
 .table-section h2 {

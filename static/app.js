@@ -30,16 +30,21 @@
   var lastFilteredSorted = [];
 
   var DATE_FIRST = '2025-05-01';
-  var DATE_MAX = '2025-05-01';
+
+  function getTodayDate() {
+    var t = new Date();
+    return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+  }
 
   function setTodayDefault() {
+    var today = getTodayDate();
     if (dateFrom && dateTo) {
       dateFrom.min = DATE_FIRST;
-      dateFrom.max = DATE_MAX;
+      dateFrom.max = today;
       dateTo.min = DATE_FIRST;
-      dateTo.max = DATE_MAX;
-      dateFrom.value = DATE_FIRST;
-      dateTo.value = DATE_MAX;
+      dateTo.max = today;
+      dateFrom.value = today;
+      dateTo.value = today;
     }
   }
 
@@ -298,6 +303,7 @@
         '<td class="num">' + formatCell(r.costs_with_vat_total) + '</td>' +
         '<td class="num">' + formatCell(r.orders_total) + '</td>' +
         '<td class="num">' + formatCell(r.revenue_total) + '</td>' +
+        '<td class="num">' + escapeHtml(formatCell(r.shop_item_id)) + '</td>' +
         '</tr>';
     }).join('');
 
@@ -411,7 +417,7 @@
 
   function exportCsv() {
     var rows = lastFilteredSorted.length ? lastFilteredSorted : getSortedRows(aggregateByProduct(getFilteredRows()));
-    var cols = ['shop_item_name', 'visits_total', 'costs_with_vat_total', 'orders_total', 'revenue_total'];
+    var cols = ['shop_item_name', 'visits_total', 'costs_with_vat_total', 'orders_total', 'revenue_total', 'shop_item_id'];
     var header = cols.join(',');
     var csvRows = rows.map(function (r) {
       return cols.map(function (c) {
