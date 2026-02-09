@@ -1,18 +1,74 @@
 """
 Heureka Conversions Report - Flask backend.
 Proxy pro Heureka Conversion measurement reports API.
-API klíč je pouze v ENV (HEUREKA_API_KEY), nikdy neve frontendu.
+Přístup jen po přihlášení (email + heslo).
 """
 
+import json
 import os
 import re
 import time
 from datetime import datetime, timedelta
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, session, render_template
+from werkzeug.security import check_password_hash, generate_password_hash
 import requests
 
+# Načte .env v kořenu projektu (pro lokální vývoj)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 app = Flask(__name__, static_folder="static")
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # vypnout cache pro dev
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY") or "dev-secret-change-in-production"
+
+# Uživatelé z env (email -> { name, password_hash }); hesla se hashují při startu
+def _load_users():
+    raw = os.environ.get("AUTH_USERS_JSON")
+    if not raw or not raw.strip():
+        return {}
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return {}
+    users = {}
+    for email, opts in data.items():
+        if not isinstance(opts, dict) or "name" not in opts or "password" not in opts:
+            continue
+        email = str(email).strip().lower()
+        if not email:
+            continue
+        users[email] = {
+            "name": str(opts["name"]).strip() or email,
+            "password_hash": generate_password_hash(str(opts["password"])),
+        }
+    return users
+
+USERS = _load_users()
+if USERS:
+    print(f"[AUTH] Loaded {len(USERS)} user(s): {', '.join(USERS.keys())}")
+else:
+    print("[AUTH] WARNING: No users loaded! Check AUTH_USERS_JSON in .env")
+
+
+def _current_user():
+    email = session.get("user_id")
+    if not email or email not in USERS:
+        return None
+    return {"email": email, "name": USERS[email]["name"]}
+
+
+@app.before_request
+def require_login():
+    if request.path == "/login" or request.path.startswith("/static"):
+        return None
+    if _current_user() is None:
+        if request.path.startswith("/api"):
+            return jsonify({"error": "Pro zobrazení dat se přihlaste."}), 401
+        return redirect(url_for("login"))
+    return None
 
 HEUREKA_API_BASE = "https://api.heureka.group"
 HEUREKA_API_KEY = os.environ.get("HEUREKA_API_KEY")
@@ -52,9 +108,33 @@ def _set_cache(date, data):
     _cache[date] = (time.time(), data)
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html", error=None)
+    email = (request.form.get("email") or "").strip().lower()
+    password = request.form.get("password") or ""
+    if not email or not password:
+        return render_template("login.html", error="Vyplňte e-mail i heslo.")
+    if email not in USERS:
+        return render_template("login.html", error="Neplatný e-mail nebo heslo.")
+    if not check_password_hash(USERS[email]["password_hash"], password):
+        return render_template("login.html", error="Neplatný e-mail nebo heslo.")
+    session["user_id"] = email
+    session["user_name"] = USERS[email]["name"]
+    return redirect(url_for("index"))
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
 @app.route("/")
 def index():
-    return send_from_directory("templates", "index.html")
+    user = _current_user()
+    return render_template("index.html", user_name=user["name"] if user else None)
 
 
 def _fetch_one_day(date):

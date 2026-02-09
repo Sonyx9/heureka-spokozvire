@@ -29,14 +29,18 @@
   var currentPage = 1;
   var lastFilteredSorted = [];
 
+  var DATE_FIRST = '2025-05-01';
+  var DATE_MAX = '2025-05-01';
+
   function setTodayDefault() {
-    var today = new Date();
-    var y = today.getFullYear();
-    var m = String(today.getMonth() + 1).padStart(2, '0');
-    var d = String(today.getDate()).padStart(2, '0');
-    var dateStr = y + '-' + m + '-' + d;
-    dateFrom.value = dateStr;
-    dateTo.value = dateStr;
+    if (dateFrom && dateTo) {
+      dateFrom.min = DATE_FIRST;
+      dateFrom.max = DATE_MAX;
+      dateTo.min = DATE_FIRST;
+      dateTo.max = DATE_MAX;
+      dateFrom.value = DATE_FIRST;
+      dateTo.value = DATE_MAX;
+    }
   }
 
   function setStatus(msg, isError) {

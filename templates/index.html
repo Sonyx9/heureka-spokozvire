@@ -16,6 +16,10 @@
   </div>
   <div class="container">
     <header class="site-header">
+      <div class="user-bar">
+        <span class="user-name">Přihlášen: {{ user_name }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-link">Odhlásit</a>
+      </div>
       <div class="header-top">
         <img src="/static/logo-spokojene-zvire.png" alt="Spokojené zvíře" class="logo-main" />
         <img src="/static/logo-bm.png" alt="BM" class="logo-corner" />

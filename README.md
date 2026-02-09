@@ -28,23 +28,34 @@ Jednoduchá webová aplikace, která stáhne a zobrazí data z **Heureka Convers
    pip install -r requirements.txt
    ```
 
-4. **Nastavení API klíče**
+4. **Proměnné prostředí (API klíč a přihlášení)**
 
-   Nastavte proměnnou prostředí `HEUREKA_API_KEY` na váš Heureka API klíč:
+   Zkopírujte `.env.example` na `.env` a vyplňte hodnoty. **Soubor `.env` necommitujte** (je v `.gitignore`).
 
-   - **Windows (PowerShell):**
+   | Proměnná | Popis |
+   |----------|--------|
+   | `FLASK_SECRET_KEY` | Tajný klíč pro Flask session (na produkci povinné, např. dlouhý náhodný řetězec). |
+   | `HEUREKA_API_KEY` | Heureka API klíč pro Conversion measurement reports. |
+   | `AUTH_USERS_JSON` | JSON s přihlašovacími účty – viz níže. |
+
+   **Formát `AUTH_USERS_JSON`:** objekt, kde klíč je e-mail a hodnota `{ "name": "Zobrazované jméno", "password": "heslo" }`. Příklad:
+
+   ```json
+   {"postmaster@example.com":{"name":"Admin","password":"tajne-heslo"},"druhy@example.com":{"name":"Účet 2","password":"dalsi-heslo"}}
+   ```
+
+   - **Windows (PowerShell)** – pro lokální vývoj můžete nastavit v terminálu:
      ```powershell
      $env:HEUREKA_API_KEY = "váš-api-klíč"
-     ```
-
-   - **Windows (CMD):**
-     ```cmd
-     set HEUREKA_API_KEY=váš-api-klíč
+     $env:FLASK_SECRET_KEY = "náhodný-tajný-řetězec"
+     $env:AUTH_USERS_JSON = '{"email@example.com":{"name":"Admin","password":"heslo"}}'
      ```
 
    - **Linux / macOS:**
      ```bash
      export HEUREKA_API_KEY="váš-api-klíč"
+     export FLASK_SECRET_KEY="náhodný-tajný-řetězec"
+     export AUTH_USERS_JSON='{"email@example.com":{"name":"Admin","password":"heslo"}}'
      ```
 
    API klíč získáte v Heureka rozhraní (např. v nastavení účtu / API).
@@ -140,6 +151,18 @@ Heureka/
     styles.css        # Minimální styly
 ```
 
+## Nasazení na Railway
+
+Aplikace je připravena na deploy na [Railway](https://railway.app). **Žádné hesla ani API klíče neukládejte do Gitu** – nastavte je jako **Variables** v Railway dashboardu:
+
+1. V projektu Railway: **Variables** → přidejte:
+   - `FLASK_SECRET_KEY` – silný náhodný řetězec (např. vygenerovaný: `python -c "import secrets; print(secrets.token_hex(32))"`).
+   - `HEUREKA_API_KEY` – váš Heureka API klíč.
+   - `AUTH_USERS_JSON` – JSON s účty (e-mail → `{"name":"…","password":"…"}`). Uvnitř JSONu uvozovky u řetězců escapeujte podle pravidel Railway (obvykle dvojité uvozovky `"`).
+
+2. Build a start: Railway typicky detekuje Python a spustí `python app.py` nebo `gunicorn`; v `Procfile` nebo nastavení můžete uvést např. `web: gunicorn -w 1 -b 0.0.0.0:$PORT app:app` (přidejte `gunicorn` do `requirements.txt`).
+
 ## Bezpečnost
 
-- API klíč Heureka **není nikdy** posílán do prohlížeče ani obsažen v HTML/JS/CSS. Veškerá komunikace s Heureka API probíhá pouze na backendu s využitím `HEUREKA_API_KEY` z prostředí.
+- API klíč Heureka a přihlašovací údaje **nejsou v repozitáři**. Načítají se pouze z proměnných prostředí (lokálně z `.env`, na Railway z Variables).
+- API klíč **není nikdy** posílán do prohlížeče ani obsažen v HTML/JS/CSS. Veškerá komunikace s Heureka API probíhá pouze na backendu.
