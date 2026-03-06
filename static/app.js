@@ -237,6 +237,16 @@
     arr.sort(function (a, b) {
       var va = a[sortCol];
       var vb = b[sortCol];
+
+      // PNO a avg_cpc: řádky bez hodnoty vždy na konec; u avg_cpc i nula = bez hodnoty
+      var emptyA = (sortCol === 'pno' && (va == null || va === '')) ||
+                   (sortCol === 'avg_cpc' && (va == null || va === '' || va === 0));
+      var emptyB = (sortCol === 'pno' && (vb == null || vb === '')) ||
+                   (sortCol === 'avg_cpc' && (vb == null || vb === '' || vb === 0));
+      if (emptyA && emptyB) return 0;
+      if (emptyA) return 1;
+      if (emptyB) return -1;
+
       if (typeof va === 'number' && typeof vb === 'number') {
         return sortDesc ? vb - va : va - vb;
       }
