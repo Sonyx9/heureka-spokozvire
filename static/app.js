@@ -183,7 +183,12 @@
       o.revenue_bidded += r.revenue_bidded;
       o.revenue_not_bidded += r.revenue_not_bidded;
     });
-    return Object.keys(map).map(function (k) { return map[k]; });
+    return Object.keys(map).map(function (k) {
+      var o = map[k];
+      o.avg_cpc = o.visits_total > 0 ? o.costs_with_vat_total / o.visits_total : null;
+      o.pno = o.revenue_total > 0 ? (o.costs_with_vat_total / o.revenue_total) * 100 : null;
+      return o;
+    });
   }
 
   function fmtNum(n) {
@@ -268,6 +273,16 @@
     return String(val);
   }
 
+  function formatCpc(val) {
+    if (val == null) return '—';
+    return fmtNum(val);
+  }
+
+  function formatPno(val) {
+    if (val == null) return '—';
+    return fmtNum(val) + ' %';
+  }
+
   function updateSortIndicators() {
     var ths = tableHead.querySelectorAll('th[data-col]');
     ths.forEach(function (th) {
@@ -301,8 +316,10 @@
         '<td class="name">' + escapeHtml(formatCell(r.shop_item_name)) + '</td>' +
         '<td class="num">' + formatCell(r.visits_total) + '</td>' +
         '<td class="num">' + formatCell(r.costs_with_vat_total) + '</td>' +
+        '<td class="num">' + formatCpc(r.avg_cpc) + '</td>' +
         '<td class="num">' + formatCell(r.orders_total) + '</td>' +
         '<td class="num">' + formatCell(r.revenue_total) + '</td>' +
+        '<td class="num">' + formatPno(r.pno) + '</td>' +
         '<td class="num">' + escapeHtml(formatCell(r.shop_item_id)) + '</td>' +
         '</tr>';
     }).join('');
@@ -417,7 +434,7 @@
 
   function exportCsv() {
     var rows = lastFilteredSorted.length ? lastFilteredSorted : getSortedRows(aggregateByProduct(getFilteredRows()));
-    var cols = ['shop_item_name', 'visits_total', 'costs_with_vat_total', 'orders_total', 'revenue_total', 'shop_item_id'];
+    var cols = ['shop_item_name', 'visits_total', 'costs_with_vat_total', 'avg_cpc', 'orders_total', 'revenue_total', 'pno', 'shop_item_id'];
     var header = cols.join(',');
     var csvRows = rows.map(function (r) {
       return cols.map(function (c) {
